@@ -25,7 +25,47 @@ Feature: Adding a tool
       | --image |
 
   Scenario: Successfully adding a tool with a specific tag
+    Given there's not a jq tool configured
+    When I run `kit add jq --tag variant`
+    Then the jq tool is configured
+    And jq's tag is variant
+    And that is jq's only non-default setting
 
-  Scenario: Successfully adding a tool with a tty
+  Scenario Outline: Successfully adding a tool with a tty
+    Given there's not a jq tool configured
+    When I run `kit add jq <Flag>`
+    Then the jq tool is configured
+    And jq's tty is true
+    And that is jq's only non-default setting
+
+    Examples:
+      | Flag  |
+      | -t    |
+      | --tty |
 
   Scenario: Successfully adding a tool without streaming
+    Given there's not a jq tool configured
+    When I run `kit add jq <Flag> variant`
+    Then the jq tool is configured
+    And jq's stream is false
+    And that is jq's only non-default setting
+
+    Examples:
+      | Flag        |
+      | -n          |
+      | --no-stream |
+
+  Scenario Outline: Updating a tool
+    Given there is already a jq tool configured with default settings
+    When I run `kit add jq <Flag>`
+    Then jq's configuration is updated
+
+    Examples:
+      | Flag                    |
+      | -i whatever/image       |
+      | --image whatever/image  |
+      | --tag sometag           |
+      | -t                      |
+      | --tty                   |
+      | -n                      |
+      | --no-stream             |
