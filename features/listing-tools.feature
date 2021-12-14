@@ -8,6 +8,7 @@ Feature: Listing Tools
     Then there is no output
 
   Scenario: Listing tools when there are some
-    Given I've configured the blah tool
+    Given there are tools configured
     When I run `kit list`
-    Then I see blah in the list of configured tools
+    Then there is output
+    And it mentions each of the configured tools
