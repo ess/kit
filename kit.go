@@ -13,3 +13,11 @@ type ToolService interface {
 	Find(string) (*Tool, error)
 	Persist(*Tool) (*Tool, error)
 }
+
+type Group struct {
+	Tools []*Tool `yaml:tools`
+}
+
+type GroupFetcher interface {
+	Fetch(string) (*Group, error)
+}
