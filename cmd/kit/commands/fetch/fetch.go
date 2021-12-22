@@ -1,4 +1,4 @@
-package commands
+package fetch
 
 import (
 	"fmt"
@@ -6,10 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "Update kit to the latest version",
-	Long:  `Update kit to the latest version`,
+var Command = &cobra.Command{
+	Use:     "fetch",
+	Aliases: []string{"f"},
+	Short:   "Fetch a group manifest from an external source",
+	Long:    `Fetch a group manifest from an external source`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Called as", cmd.CalledAs())
 
@@ -17,8 +18,4 @@ var updateCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(updateCmd)
 }

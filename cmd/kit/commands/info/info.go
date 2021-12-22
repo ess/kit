@@ -1,4 +1,4 @@
-package commands
+package info
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var infoCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:     "info",
 	Aliases: []string{"info"},
 	Short:   "Show information about tools",
@@ -18,8 +18,4 @@ var infoCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(infoCmd)
 }

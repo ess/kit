@@ -1,4 +1,4 @@
-package commands
+package uninstall
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var shellCmd = &cobra.Command{
-	Use:   "shell",
-	Short: "Start an interactive shell",
-	Long:  `Start an interactive shell`,
+var Command = &cobra.Command{
+	Use:   "uninstall",
+	Short: "Uninstall kit",
+	Long:  `Uninstall kit`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Called as", cmd.CalledAs())
 
@@ -17,8 +17,4 @@ var shellCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(shellCmd)
 }

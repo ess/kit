@@ -1,4 +1,4 @@
-package commands
+package list
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
 	Short:   "List known configured tools",
@@ -18,8 +18,4 @@ var listCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(listCmd)
 }

@@ -7,6 +7,18 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/ess/kit/cmd/kit/commands/add"
+	"github.com/ess/kit/cmd/kit/commands/configure"
+	"github.com/ess/kit/cmd/kit/commands/fetch"
+	"github.com/ess/kit/cmd/kit/commands/info"
+	"github.com/ess/kit/cmd/kit/commands/list"
+	"github.com/ess/kit/cmd/kit/commands/paths"
+	"github.com/ess/kit/cmd/kit/commands/rm"
+	"github.com/ess/kit/cmd/kit/commands/shell"
+	"github.com/ess/kit/cmd/kit/commands/uninstall"
+	"github.com/ess/kit/cmd/kit/commands/update"
+	"github.com/ess/kit/cmd/kit/commands/workspace"
 )
 
 var cfgFile string
@@ -47,6 +59,18 @@ func Execute() error {
 }
 
 func init() {
+	RootCmd.AddCommand(add.Command)
+	RootCmd.AddCommand(configure.Command)
+	RootCmd.AddCommand(fetch.Command)
+	RootCmd.AddCommand(info.Command)
+	RootCmd.AddCommand(list.Command)
+	RootCmd.AddCommand(paths.Command)
+	RootCmd.AddCommand(rm.Command)
+	RootCmd.AddCommand(shell.Command)
+	RootCmd.AddCommand(uninstall.Command)
+	RootCmd.AddCommand(update.Command)
+	RootCmd.AddCommand(workspace.Command)
+
 	cobra.OnInitialize(initConfig)
 }
 

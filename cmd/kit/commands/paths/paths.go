@@ -1,4 +1,4 @@
-package commands
+package paths
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pathsCmd = &cobra.Command{
+var Command = &cobra.Command{
 	Use:   "paths",
 	Short: "Show the execution paths for the tools",
 	Long:  `Show the execution paths for the tools`,
@@ -17,8 +17,4 @@ var pathsCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(pathsCmd)
 }

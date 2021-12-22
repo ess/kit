@@ -1,4 +1,4 @@
-package commands
+package workspace
 
 import (
 	"fmt"
@@ -6,10 +6,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rmCmd = &cobra.Command{
-	Use:   "rm",
-	Short: "Remove a tool from the tooklit",
-	Long:  `Remove a tool from the toolkit`,
+var Command = &cobra.Command{
+	Use:     "workspace",
+	Aliases: []string{"w"},
+	Short:   "workspace commands",
+	Long:    `workspace commands`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Called as", cmd.CalledAs())
 
@@ -17,8 +18,4 @@ var rmCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(rmCmd)
 }

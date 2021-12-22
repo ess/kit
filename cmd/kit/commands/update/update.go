@@ -1,4 +1,4 @@
-package commands
+package update
 
 import (
 	"fmt"
@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var configureCmd = &cobra.Command{
-	Use:   "configure",
-	Short: "Configure existing tool groups",
-	Long:  `Configure existing tool groups`,
+var Command = &cobra.Command{
+	Use:   "update",
+	Short: "Update kit to the latest version",
+	Long:  `Update kit to the latest version`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println("Called as", cmd.CalledAs())
 
@@ -17,8 +17,4 @@ var configureCmd = &cobra.Command{
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
-}
-
-func init() {
-	RootCmd.AddCommand(configureCmd)
 }
