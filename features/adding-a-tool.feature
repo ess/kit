@@ -2,22 +2,22 @@ Feature: Adding a tool
   I want to be able to actually set up some tools, so I should have the
   ability to add one.
 
-  Scenario: Successfully adding a tool with defaults
+  Background:
     Given there's not a jq tool configured
+
+  Scenario: Successfully adding a tool with default behavior
     When I run `kit add jq`
     Then the jq tool is configured
     And a jq symlink to kit now exists
     And jq's image is docker.io/wayneeseguin/c3tk
+    And jq's image is pulled from upstream
     And jq's default tag is latest
     And jq is set up to stream IO
     But jq is not set up with a TTY
 
   Scenario Outline: Successfully adding a tool with a specific image
-    Given there's not a jq tool configured
     When I run `kit add jq <Flag> ess/c3tk`
-    Then the jq tool is configured
-    And jq's image is docker.io/ess/c3tk
-    And that is jq's only non-default setting
+    Then the jq tool is successfully added with the docker.io/ess/c3tk image
 
     Examples:
       | Flag    |
@@ -25,18 +25,12 @@ Feature: Adding a tool
       | --image |
 
   Scenario: Successfully adding a tool with a specific tag
-    Given there's not a jq tool configured
     When I run `kit add jq --tag variant`
-    Then the jq tool is configured
-    And jq's tag is variant
-    And that is jq's only non-default setting
+    Then the jq tool is successfully added with the variant tag
 
   Scenario Outline: Successfully adding a tool with a tty
-    Given there's not a jq tool configured
     When I run `kit add jq <Flag>`
-    Then the jq tool is configured
-    And jq's tty is true
-    And that is jq's only non-default setting
+    Then the jq tool is successfully added with TTY enabled
 
     Examples:
       | Flag  |
@@ -44,11 +38,8 @@ Feature: Adding a tool
       | --tty |
 
   Scenario: Successfully adding a tool without streaming
-    Given there's not a jq tool configured
     When I run `kit add jq <Flag> variant`
-    Then the jq tool is configured
-    And jq's stream is false
-    And that is jq's only non-default setting
+    Then the jq tool is successfully added with IO streaming disabled
 
     Examples:
       | Flag        |
@@ -59,6 +50,7 @@ Feature: Adding a tool
     Given there is already a jq tool configured with default settings
     When I run `kit add jq <Flag>`
     Then jq's configuration is updated
+    And jq's image is pulled from upstream
 
     Examples:
       | Flag                    |
