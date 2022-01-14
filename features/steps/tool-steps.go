@@ -3,7 +3,9 @@ package steps
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 
+	"github.com/ess/jamaica"
 	"github.com/ess/kennel"
 	"github.com/ess/kit/cmd/kit/services"
 	"github.com/ess/kit/cmd/kit/util"
@@ -67,7 +69,9 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 			return err
 		}
 
-		if !containerService.Pulled(t) {
+		expected := fmt.Sprintf("EXECUTE: docker pull %s:%s", t.Image, t.Tag)
+
+		if !strings.Contains(jamaica.LastCommandStdout(), expected) {
 			return fmt.Errorf("Expected jq to have been pulled")
 		}
 

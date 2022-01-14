@@ -1,29 +1,35 @@
 package steps
 
 import (
+	"fmt"
+
 	"github.com/ess/fakefs"
 	"github.com/ess/kennel"
 
-	"github.com/ess/kit/cmd/kit/services"
 	"github.com/ess/kit/fs"
-	"github.com/ess/kit/mock"
+	"github.com/ess/kit/os"
 )
 
-// Mock out the services
+func stubExec() {
+	os.Execute = func(command string, args ...string) error {
+		printable := make([]interface{}, len(args)+2)
+		printable[0] = "EXECUTE:"
+		printable[1] = command
+		for i := range args {
+			printable[i+2] = args[i]
+		}
 
-//var toolService = mock.NewToolService()
-var containerService = mock.NewContainerService()
-
-//var linkService = mock.NewLinkService()
+		fmt.Println(printable...)
+		return nil
+	}
+}
 
 type mockUp struct{}
 
 func (steps mockUp) StepUp(s kennel.Suite) {
 	s.BeforeSuite(func() {
 		fs.Root = fakefs.New()
-		//services.ToolService = toolService
-		services.ContainerService = containerService
-		//services.LinkService = linkService
+		stubExec()
 	})
 
 	s.BeforeScenario(func(interface{}) {
@@ -33,9 +39,6 @@ func (steps mockUp) StepUp(s kennel.Suite) {
 
 func ResetMocks() {
 	fs.Root = fakefs.New()
-	//toolService.Reset()
-	containerService.Reset()
-	//linkService.Reset()
 }
 
 func init() {

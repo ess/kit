@@ -18,7 +18,7 @@ append() {
 coverpkg() {
   local output=""
 
-  for package in cmd core docker fs podman nerdctl yaml
+  for package in cmd core docker fs mock os podman nerdctl yaml
   do
     if [ -d "./${package}" ]
     then
