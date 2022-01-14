@@ -2,35 +2,44 @@ package steps
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/ess/kennel"
+	"github.com/ess/kit/cmd/kit/services"
+	"github.com/ess/kit/cmd/kit/util"
 	"github.com/ess/kit/core"
+	"github.com/ess/kit/fs"
 )
 
 type ToolSteps struct{}
 
 func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	s.Step(`^there's not a jq tool configured$`, func() error {
-		if t, err := toolService.Find("jq"); err == nil {
-			toolService.Delete(t)
+		if t, err := services.ToolService.Find("jq"); err == nil {
+			services.ToolService.Delete(t)
 		}
 
 		return nil
 	})
 
 	s.Step(`^the jq tool is configured$`, func() error {
-		_, err := toolService.Find("jq")
+		_, err := services.ToolService.Find("jq")
 
 		return err
 	})
 
 	s.Step(`^a jq symlink to kit now exists$`, func() error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
 
-		if !linkService.Linked(t) {
+		//if !linkService.Linked(t) {
+		//fmt.Println("the tool's name is", t.Name)
+		//return fmt.Errorf("Expected jq to have been linked")
+		//}
+
+		if !fs.FileExists(filepath.Join(util.LinksPath, t.Name)) {
 			return fmt.Errorf("Expected jq to have been linked")
 		}
 
@@ -38,7 +47,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^jq's image is (.+)$`, func(image string) error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -53,7 +62,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^jq's image gets pulled from upstream$`, func() error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -66,7 +75,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^jq's default tag is (.+)$`, func(tag string) error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -82,7 +91,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^jq is set up to stream IO$`, func() error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -95,7 +104,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^the jq tool is successfully added with the (.+) image$`, func(image string) error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -111,7 +120,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^the jq tool is successfully added with the (.+) tag$`, func(tag string) error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -127,7 +136,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^the jq tool is successfully added with IO streaming disabled$`, func() error {
-		t, err := toolService.Find("jq")
+		t, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}
@@ -142,16 +151,16 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	s.Step(`^there is already a jq tool configured with default settings$`, func() error {
 		jq := core.NewTool("jq")
 
-		tool, err := toolService.Persist(jq)
+		err := services.ToolService.Persist(jq)
 		if err != nil {
 			return fmt.Errorf("Could not set up default jq.")
 		}
 
 		orig := &core.Tool{}
-		orig.Name = tool.Name
-		orig.Image = tool.Image
-		orig.Tag = tool.Tag
-		orig.Stream = tool.Stream
+		orig.Name = jq.Name
+		orig.Image = jq.Image
+		orig.Tag = jq.Tag
+		orig.Stream = jq.Stream
 
 		err = facts.Memorize("orig", orig)
 		if err != nil {
@@ -162,7 +171,7 @@ func (steps *ToolSteps) StepUp(s kennel.Suite) {
 	})
 
 	s.Step(`^jq's configuration is updated`, func() error {
-		tool, err := toolService.Find("jq")
+		tool, err := services.ToolService.Find("jq")
 		if err != nil {
 			return err
 		}

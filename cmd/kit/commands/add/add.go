@@ -34,12 +34,12 @@ var Command = &cobra.Command{
 		candidate.Tag = addTag
 		candidate.Stream = !addNoStream
 
-		tool, err := services.ToolService.Persist(candidate)
+		err := services.ToolService.Persist(candidate)
 		if err != nil {
 			return err
 		}
 
-		err = services.ContainerService.Pull(tool)
+		err = services.ContainerService.Pull(candidate)
 		if err != nil {
 			return err
 		}
@@ -49,7 +49,7 @@ var Command = &cobra.Command{
 			return fmt.Errorf("could not detect my absolute path")
 		}
 
-		return services.LinkService.Link(tool, me)
+		return services.LinkService.Link(candidate, me)
 	},
 	SilenceUsage:  true,
 	SilenceErrors: true,
