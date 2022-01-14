@@ -18,10 +18,18 @@ var addTag string
 var addNoStream bool
 
 var Command = &cobra.Command{
-	Use:     "add",
+	Use:     "add <tool name>",
 	Aliases: []string{"a"},
 	Short:   "Add a tool to the toolkit",
 	Long:    `Add a tool to the toolkit`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 1 {
+			cmd.Help()
+			return fmt.Errorf("\nRequires one argument: <tool name>")
+		}
+
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		image := addImage
 
