@@ -5,7 +5,7 @@ import (
 )
 
 type ContainerService struct {
-	pulls []*core.Tool
+	pulls map[string]bool
 }
 
 func NewContainerService() *ContainerService {
@@ -16,21 +16,20 @@ func NewContainerService() *ContainerService {
 }
 
 func (service *ContainerService) Pull(tool *core.Tool) error {
-	service.pulls = append(service.pulls, tool)
+	service.pulls[tool.Name] = true
 
 	return nil
 }
 
 func (service *ContainerService) Pulled(tool *core.Tool) bool {
-	for _, candidate := range service.pulls {
-		if candidate == tool {
-			return true
-		}
+	found, ok := service.pulls[tool.Name]
+	if !ok {
+		return false
 	}
 
-	return false
+	return found
 }
 
 func (service *ContainerService) Reset() {
-	service.pulls = make([]*core.Tool, 0)
+	service.pulls = make(map[string]bool)
 }

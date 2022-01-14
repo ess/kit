@@ -37,11 +37,11 @@ func (service *ToolService) Find(name string) (*core.Tool, error) {
 	return nil, fmt.Errorf("no such tool")
 }
 
-func (service *ToolService) Persist(tool *core.Tool) (*core.Tool, error) {
+func (service *ToolService) Persist(tool *core.Tool) error {
 
 	service.tools[tool.Name] = tool
 
-	return tool, nil
+	return nil
 }
 
 func (service *ToolService) Delete(tool *core.Tool) error {

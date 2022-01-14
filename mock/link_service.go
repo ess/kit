@@ -5,7 +5,7 @@ import (
 )
 
 type LinkService struct {
-	links []*core.Tool
+	links map[string]bool
 }
 
 func NewLinkService() *LinkService {
@@ -16,21 +16,20 @@ func NewLinkService() *LinkService {
 }
 
 func (service *LinkService) Link(tool *core.Tool, target string) error {
-	service.links = append(service.links, tool)
+	service.links[tool.Name] = true
 
 	return nil
 }
 
 func (service *LinkService) Linked(tool *core.Tool) bool {
-	for _, candidate := range service.links {
-		if candidate == tool {
-			return true
-		}
+	found, ok := service.links[tool.Name]
+	if !ok {
+		return false
 	}
 
-	return false
+	return found
 }
 
 func (service *LinkService) Reset() {
-	service.links = make([]*core.Tool, 0)
+	service.links = make(map[string]bool)
 }
