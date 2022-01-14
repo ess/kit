@@ -10,10 +10,9 @@ Feature: Adding a tool
     Then the jq tool is configured
     And a jq symlink to kit now exists
     And jq's image is docker.io/wayneeseguin/c3tk
-    And jq's image is pulled from upstream
+    And jq's image gets pulled from upstream
     And jq's default tag is latest
     And jq is set up to stream IO
-    But jq is not set up with a TTY
 
   Scenario Outline: Successfully adding a tool with a specific image
     When I run `kit add jq <Flag> ess/c3tk`
@@ -24,20 +23,16 @@ Feature: Adding a tool
       | -i      |
       | --image |
 
-  Scenario: Successfully adding a tool with a specific tag
-    When I run `kit add jq --tag variant`
+  Scenario Outline: Successfully adding a tool with a specific tag
+    When I run `kit add jq <Flag> variant`
     Then the jq tool is successfully added with the variant tag
-
-  Scenario Outline: Successfully adding a tool with a tty
-    When I run `kit add jq <Flag>`
-    Then the jq tool is successfully added with TTY enabled
 
     Examples:
       | Flag  |
       | -t    |
-      | --tty |
+      | --tag |
 
-  Scenario: Successfully adding a tool without streaming
+  Scenario Outline: Successfully adding a tool without streaming
     When I run `kit add jq <Flag> variant`
     Then the jq tool is successfully added with IO streaming disabled
 
@@ -50,14 +45,13 @@ Feature: Adding a tool
     Given there is already a jq tool configured with default settings
     When I run `kit add jq <Flag>`
     Then jq's configuration is updated
-    And jq's image is pulled from upstream
+    And jq's image gets pulled from upstream
 
     Examples:
       | Flag                    |
       | -i whatever/image       |
       | --image whatever/image  |
+      | -t sometag              |
       | --tag sometag           |
-      | -t                      |
-      | --tty                   |
       | -n                      |
       | --no-stream             |

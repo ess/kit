@@ -19,6 +19,7 @@ import (
 	"github.com/ess/kit/cmd/kit/commands/uninstall"
 	"github.com/ess/kit/cmd/kit/commands/update"
 	"github.com/ess/kit/cmd/kit/commands/workspace"
+	"github.com/ess/kit/cmd/kit/util"
 )
 
 var cfgFile string
@@ -49,7 +50,14 @@ Available Commands section below.`,
 }
 
 func Execute() error {
-	err := RootCmd.Execute()
+	err := util.CreatePaths()
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	err = RootCmd.Execute()
 
 	if err != nil {
 		fmt.Println(err)

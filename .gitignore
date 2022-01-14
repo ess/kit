@@ -1,3 +1,4 @@
 *~
 *.swp
 /kit
+/coverage.out
