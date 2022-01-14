@@ -19,7 +19,7 @@ func NewTool(name string) *Tool {
 type ToolService interface {
 	All() []*Tool
 	Find(string) (*Tool, error)
-	Persist(*Tool) (*Tool, error)
+	Persist(*Tool) error
 	Delete(*Tool) error
 }
 

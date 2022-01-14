@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/spf13/afero"
+	"github.com/ess/fakefs"
 	"gopkg.in/yaml.v2"
 
 	"github.com/ess/kit/core"
 )
 
 func setupFs() {
-	Root = afero.NewMemMapFs()
+	Root = fakefs.New()
 }
 
 func stubTools(baseDir string, quantity int) ([]*core.Tool, error) {

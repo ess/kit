@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/afero"
@@ -58,8 +59,21 @@ var CreateDir = func(path string) error {
 	return nil
 }
 
+var Delete = func(path string) error {
+	return Root.Remove(path)
+}
+
 var DeleteDir = func(path string) error {
 	return Root.RemoveAll(path)
+}
+
+var SymlinkIfPossible = func(orig string, dest string) error {
+	linker, ok := Root.(afero.Linker)
+	if !ok {
+		return fmt.Errorf("fs is not capable of linking")
+	}
+
+	return linker.SymlinkIfPossible(orig, dest)
 }
 
 func ReadDir(path string) ([]os.FileInfo, error) {

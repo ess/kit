@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ess/kit/core"
-	"gopkg.in/yaml.v2"
+	"github.com/ess/kit/yaml"
 )
 
 type ToolService struct {
@@ -17,6 +17,23 @@ func NewToolService(baseDir string) *ToolService {
 	return t
 }
 
+func (service *ToolService) readTool(name string) (*core.Tool, error) {
+	path := service.path(name)
+
+	data, err := ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("could not read %s", path)
+	}
+
+	tool, err := yaml.DecodeTool(data)
+	if err != nil {
+		return nil, fmt.Errorf("could not decode %s", path)
+	}
+
+	return tool, nil
+
+}
+
 func (service *ToolService) All() []*core.Tool {
 
 	output := make([]*core.Tool, 0)
@@ -27,12 +44,8 @@ func (service *ToolService) All() []*core.Tool {
 	}
 
 	for _, f := range candidates {
-		path := service.baseDir + "/" + f.Name()
-		if data, err := ReadFile(path); err == nil {
-			tool := &core.Tool{}
-			if yErr := yaml.Unmarshal(data, tool); yErr == nil {
-				output = append(output, tool)
-			}
+		if tool, err := service.readTool(f.Name()); err == nil {
+			output = append(output, tool)
 		}
 	}
 
@@ -40,28 +53,33 @@ func (service *ToolService) All() []*core.Tool {
 }
 
 func (service *ToolService) Find(name string) (*core.Tool, error) {
-	path := service.baseDir + "/" + name
-
-	data, err := ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("could not read %s", path)
-	}
-
-	tool := &core.Tool{}
-	err = yaml.Unmarshal(data, tool)
-	if err != nil {
-		return nil, fmt.Errorf("could not decode %s", path)
-	}
-
-	return tool, nil
+	return service.readTool(name)
 }
 
-func (service *ToolService) Persist(tool *core.Tool) (*core.Tool, error) {
+func (service *ToolService) Persist(tool *core.Tool) error {
+	data, err := yaml.EncodeTool(tool)
+	if err != nil {
+		return fmt.Errorf("could not encode tool %s", tool.Name)
+	}
 
-	return nil, fmt.Errorf("fs.ToolService.Persist unimplemented")
+	err = WriteFile(service.path(tool.Name), data, 0644)
+	if err != nil {
+		return fmt.Errorf("could not write tool %s: %s", tool.Name, err)
+	}
+
+	return nil
 }
 
 func (service *ToolService) Delete(tool *core.Tool) error {
+	path := service.path(tool.Name)
 
-	return fmt.Errorf("fs.ToolService.Delete unimplemented")
+	if !FileExists(path) {
+		return nil
+	}
+
+	return Delete(path)
+}
+
+func (service *ToolService) path(name string) string {
+	return service.baseDir + "/" + name
 }
