@@ -18,26 +18,13 @@ append() {
 coverpkg() {
   local output=""
 
-  if [ -d ./cmd ]
-  then
-    output=$(append "${output}" "./cmd/...")
-  fi
-
-  if [ -d ./core ]
-  then
-    output=$(append "${output}" "./core/...")
-  fi
-
-  if [ -d ./fs ]
-  then
-    output=$(append "${output}" "./fs/...")
-  fi
-
-  if [ -d ./docker ]
-  then
-    output=$(append "${output}" "./docker/...")
-  fi
-  
+  for package in cmd core docker fs podman nerdctl yaml
+  do
+    if [ -d "./${package}" ]
+    then
+      output=$(append "${output}" "./${package}"...)
+    fi
+  done
 
   if [ -z "${output}" ]
   then
